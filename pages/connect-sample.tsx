@@ -41,45 +41,49 @@ export default function ConnectSample() {
       </section>
 
       <footer>
-        {status === WalletStatus.WALLET_NOT_CONNECTED && (
-          <>
-            {availableInstallTypes.map((connectType) => (
-              <button
-                key={"install-" + connectType}
-                onClick={() => install(connectType)}
-              >
-                Install {connectType}
-              </button>
-            ))}
-            {availableConnectTypes.map((connectType) => (
-              <button
-                key={"connect-" + connectType}
-                onClick={() => connect(connectType)}
-              >
-                Connect {connectType}
-              </button>
-            ))}
-            <br />
-            {availableConnections.map(
-              ({ type, name, icon, identifier = "" }) => (
-                <button
-                  key={"connection-" + type + identifier}
-                  onClick={() => connect(type, identifier)}
-                  ref={
-                    type === "WALLETCONNECT" ? onWalletConnectDetected : null
-                  }
-                >
-                  <img
-                    src={icon}
-                    alt={name}
-                    style={{ width: "1em", height: "1em" }}
-                  />
-                  {name} [{identifier}] {type}
-                </button>
-              )
+        {status === WalletStatus.WALLET_NOT_CONNECTED &&
+          status !==
+            WalletStatus.WALLET_CONNECTED(
+              <>
+                {availableInstallTypes.map((connectType) => (
+                  <button
+                    key={"install-" + connectType}
+                    onClick={() => install(connectType)}
+                  >
+                    Install {connectType}
+                  </button>
+                ))}
+                {availableConnectTypes.map((connectType) => (
+                  <button
+                    key={"connect-" + connectType}
+                    onClick={() => connect(connectType)}
+                  >
+                    Connect {connectType}
+                  </button>
+                ))}
+                <br />
+                {availableConnections.map(
+                  ({ type, name, icon, identifier = "" }) => (
+                    <button
+                      key={"connection-" + type + identifier}
+                      onClick={() => connect(type, identifier)}
+                      ref={
+                        type === "WALLETCONNECT"
+                          ? onWalletConnectDetected
+                          : null
+                      }
+                    >
+                      <img
+                        src={icon}
+                        alt={name}
+                        style={{ width: "1em", height: "1em" }}
+                      />
+                      {name} [{identifier}] {type}
+                    </button>
+                  )
+                )}
+              </>
             )}
-          </>
-        )}
         {status === WalletStatus.WALLET_CONNECTED && (
           <button onClick={() => disconnect()}>Disconnect</button>
         )}
