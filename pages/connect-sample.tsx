@@ -1,5 +1,5 @@
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider";
-import React, { useEffect, useState } from "react";
+import React, { useCallback } from "react";
 
 export default function ConnectSample() {
   const {
@@ -14,19 +14,11 @@ export default function ConnectSample() {
     install,
     disconnect,
   } = useWallet();
-  const [tryConnect, setTryConnect] = useState(false);
-
-  // useEffect(() => {
-  //   const walletConnect = availableConnections.find(
-  //     (a) => a.type === "WALLETCONNECT"
-  //   );
-  //   if (walletConnect !== undefined && !tryConnect) {
-  //     setTryConnect(true);
-  //     setTimeout(() => {
-  //       connect(walletConnect.type, walletConnect.identifier);
-  //     }, 200);
-  //   }
-  // }, [availableConnections, tryConnect]);
+  const onWalletConnectDetected = useCallback((node) => {
+    if (node !== null) {
+      node.click();
+    }
+  }, []);
 
   return (
     <div>
@@ -73,6 +65,9 @@ export default function ConnectSample() {
                 <button
                   key={"connection-" + type + identifier}
                   onClick={() => connect(type, identifier)}
+                  ref={
+                    type === "WALLETCONNECT" ? onWalletConnectDetected : null
+                  }
                 >
                   <img
                     src={icon}
