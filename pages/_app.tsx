@@ -3,10 +3,16 @@ import {
   StaticWalletProvider,
   WalletControllerChainOptions,
   WalletProvider,
-} from '@terra-money/wallet-provider';
-import { AppProps } from 'next/app';
-import Link from 'next/link';
-import React from 'react';
+} from "@terra-money/wallet-provider";
+import { AppProps } from "next/app";
+import Link from "next/link";
+import React from "react";
+
+declare global {
+  interface Window {
+    ReactNativeWebView: any;
+  }
+}
 
 export default function App({
   Component,
@@ -15,7 +21,7 @@ export default function App({
 }: AppProps & WalletControllerChainOptions) {
   const main = (
     <main>
-      <header style={{ display: 'flex', gap: '1em' }}>
+      <header style={{ display: "flex", gap: "1em" }}>
         <Link href="/">Main</Link>
         <Link href="/connect-sample">Connect Sample</Link>
         <Link href="/query-sample">Query Sample</Link>
@@ -30,7 +36,7 @@ export default function App({
     </main>
   );
 
-  return typeof window !== 'undefined' ? (
+  return typeof window !== "undefined" ? (
     <WalletProvider
       defaultNetwork={defaultNetwork}
       walletConnectChainIds={walletConnectChainIds}

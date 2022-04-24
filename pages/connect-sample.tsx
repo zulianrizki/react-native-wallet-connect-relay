@@ -1,5 +1,5 @@
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 
 export default function ConnectSample() {
   const {
@@ -19,6 +19,27 @@ export default function ConnectSample() {
       node.click();
     }
   }, []);
+
+  useEffect(() => {
+    if (status === WalletStatus.INITIALIZING) {
+      window.ReactNativeWebView.postMessage({
+        type: "changeStatus",
+        data: "initializing",
+      });
+    }
+    if (status === WalletStatus.WALLET_CONNECTED) {
+      window.ReactNativeWebView.postMessage({
+        type: "changeStatus",
+        data: "connected",
+      });
+    }
+    if (status === WalletStatus.WALLET_NOT_CONNECTED) {
+      window.ReactNativeWebView.postMessage({
+        type: "changeStatus",
+        data: "not_connected",
+      });
+    }
+  }, [status]);
 
   return (
     <div>
@@ -40,54 +61,49 @@ export default function ConnectSample() {
         </pre>
       </section>
 
-      <footer>
-        {status === WalletStatus.WALLET_NOT_CONNECTED &&
-          status !==
-            WalletStatus.WALLET_CONNECTED(
-              <>
-                {availableInstallTypes.map((connectType) => (
+      {status !== WalletStatus.WALLET_CONNECTED && (
+        <footer>
+          {status === WalletStatus.WALLET_NOT_CONNECTED && (
+            <>
+              {availableInstallTypes.map((connectType) => (
+                <button
+                  key={"install-" + connectType}
+                  onClick={() => install(connectType)}
+                >
+                  Install {connectType}
+                </button>
+              ))}
+              {availableConnectTypes.map((connectType) => (
+                <button
+                  key={"connect-" + connectType}
+                  onClick={() => connect(connectType)}
+                >
+                  Connect {connectType}
+                </button>
+              ))}
+              <br />
+              {availableConnections.map(
+                ({ type, name, icon, identifier = "" }) => (
                   <button
-                    key={"install-" + connectType}
-                    onClick={() => install(connectType)}
+                    key={"connection-" + type + identifier}
+                    onClick={() => connect(type, identifier)}
+                    ref={
+                      type === "WALLETCONNECT" ? onWalletConnectDetected : null
+                    }
                   >
-                    Install {connectType}
+                    <img
+                      src={icon}
+                      alt={name}
+                      style={{ width: "1em", height: "1em" }}
+                    />
+                    {name} [{identifier}] {type}
                   </button>
-                ))}
-                {availableConnectTypes.map((connectType) => (
-                  <button
-                    key={"connect-" + connectType}
-                    onClick={() => connect(connectType)}
-                  >
-                    Connect {connectType}
-                  </button>
-                ))}
-                <br />
-                {availableConnections.map(
-                  ({ type, name, icon, identifier = "" }) => (
-                    <button
-                      key={"connection-" + type + identifier}
-                      onClick={() => connect(type, identifier)}
-                      ref={
-                        type === "WALLETCONNECT"
-                          ? onWalletConnectDetected
-                          : null
-                      }
-                    >
-                      <img
-                        src={icon}
-                        alt={name}
-                        style={{ width: "1em", height: "1em" }}
-                      />
-                      {name} [{identifier}] {type}
-                    </button>
-                  )
-                )}
-              </>
-            )}
-        {status === WalletStatus.WALLET_CONNECTED && (
-          <button onClick={() => disconnect()}>Disconnect</button>
-        )}
-      </footer>
+                )
+              )}
+            </>
+          )}
+        </footer>
+      )}
     </div>
   );
 }
