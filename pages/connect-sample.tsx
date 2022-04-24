@@ -16,17 +16,17 @@ export default function ConnectSample() {
   } = useWallet();
   const [tryConnect, setTryConnect] = useState(false);
 
-  useEffect(() => {
-    const walletConnect = availableConnections.find(
-      (a) => a.type === "WALLETCONNECT"
-    );
-    if (walletConnect !== undefined && !tryConnect) {
-      setTryConnect(true);
-      setTimeout(() => {
-        connect(walletConnect.type, walletConnect.identifier);
-      }, 200);
-    }
-  }, [availableConnections, tryConnect]);
+  // useEffect(() => {
+  //   const walletConnect = availableConnections.find(
+  //     (a) => a.type === "WALLETCONNECT"
+  //   );
+  //   if (walletConnect !== undefined && !tryConnect) {
+  //     setTryConnect(true);
+  //     setTimeout(() => {
+  //       connect(walletConnect.type, walletConnect.identifier);
+  //     }, 200);
+  //   }
+  // }, [availableConnections, tryConnect]);
 
   return (
     <div>
