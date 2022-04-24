@@ -1,4 +1,4 @@
-import { Fee, MsgSend } from '@terra-money/terra.js';
+import { Fee, MsgSend } from "@terra-money/terra.js";
 import {
   CreateTxFailed,
   Timeout,
@@ -7,10 +7,11 @@ import {
   TxUnspecifiedError,
   useConnectedWallet,
   UserDenied,
-} from '@terra-money/wallet-provider';
-import React, { useCallback, useState } from 'react';
+} from "@terra-money/wallet-provider";
+import React, { useCallback, useEffect, useState } from "react";
+import eventEmitter from "utils/eventEmitter";
 
-const TEST_TO_ADDRESS = 'terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9';
+const TEST_TO_ADDRESS = "terra12hnhh5vtyg5juqnzm43970nh4fw42pt27nw9g9";
 
 export default function TxSample() {
   const [txResult, setTxResult] = useState<TxResult | null>(null);
@@ -23,7 +24,7 @@ export default function TxSample() {
       return;
     }
 
-    if (connectedWallet.network.chainID.startsWith('columbus')) {
+    if (connectedWallet.network.chainID.startsWith("columbus")) {
       alert(`Please only execute this example on Testnet`);
       return;
     }
@@ -33,7 +34,7 @@ export default function TxSample() {
 
     connectedWallet
       .post({
-        fee: new Fee(1000000, '200000uusd'),
+        fee: new Fee(1000000, "200000uusd"),
         msgs: [
           new MsgSend(connectedWallet.walletAddress, TEST_TO_ADDRESS, {
             uusd: 1000000,
@@ -46,23 +47,30 @@ export default function TxSample() {
       })
       .catch((error: unknown) => {
         if (error instanceof UserDenied) {
-          setTxError('User Denied');
+          setTxError("User Denied");
         } else if (error instanceof CreateTxFailed) {
-          setTxError('Create Tx Failed: ' + error.message);
+          setTxError("Create Tx Failed: " + error.message);
         } else if (error instanceof TxFailed) {
-          setTxError('Tx Failed: ' + error.message);
+          setTxError("Tx Failed: " + error.message);
         } else if (error instanceof Timeout) {
-          setTxError('Timeout');
+          setTxError("Timeout");
         } else if (error instanceof TxUnspecifiedError) {
-          setTxError('Unspecified Error: ' + error.message);
+          setTxError("Unspecified Error: " + error.message);
         } else {
           setTxError(
-            'Unknown Error: ' +
-              (error instanceof Error ? error.message : String(error)),
+            "Unknown Error: " +
+              (error instanceof Error ? error.message : String(error))
           );
         }
       });
   }, [connectedWallet]);
+
+  useEffect(() => {
+    eventEmitter.on("test", proceed);
+    return () => {
+      eventEmitter.off("test", proceed);
+    };
+  }, [proceed]);
 
   return (
     <div>
@@ -75,13 +83,13 @@ export default function TxSample() {
           <pre>{JSON.stringify(txResult, null, 2)}</pre>
           {connectedWallet && txResult && (
             <div>
-            <a
-              href={`https://finder.terra.money/${connectedWallet.network.chainID}/tx/${txResult.result.txhash}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Open Tx Result in Terra Finder
-            </a>
+              <a
+                href={`https://finder.terra.money/${connectedWallet.network.chainID}/tx/${txResult.result.txhash}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open Tx Result in Terra Finder
+              </a>
             </div>
           )}
         </>

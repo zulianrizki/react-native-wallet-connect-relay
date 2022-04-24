@@ -11,6 +11,7 @@ import React from "react";
 declare global {
   interface Window {
     ReactNativeWebView: any;
+    eventEmitter: any;
   }
 }
 
