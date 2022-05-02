@@ -21,23 +21,34 @@ export default function ConnectSample() {
   }, []);
 
   useEffect(() => {
-    if (status === WalletStatus.INITIALIZING) {
-      window.ReactNativeWebView.postMessage({
-        type: "changeStatus",
-        data: "initializing",
-      });
-    }
-    if (status === WalletStatus.WALLET_CONNECTED) {
-      window.ReactNativeWebView.postMessage({
-        type: "changeStatus",
-        data: "connected",
-      });
-    }
-    if (status === WalletStatus.WALLET_NOT_CONNECTED) {
-      window.ReactNativeWebView.postMessage({
-        type: "changeStatus",
-        data: "not_connected",
-      });
+    if (
+      typeof window !== "undefined" &&
+      typeof window.ReactNativeWebView !== "undefined"
+    ) {
+      if (status === WalletStatus.INITIALIZING) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "changeStatus",
+            data: "initializing",
+          })
+        );
+      }
+      if (status === WalletStatus.WALLET_CONNECTED) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "changeStatus",
+            data: "connected",
+          })
+        );
+      }
+      if (status === WalletStatus.WALLET_NOT_CONNECTED) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "changeStatus",
+            data: "not_connected",
+          })
+        );
+      }
     }
   }, [status]);
 
