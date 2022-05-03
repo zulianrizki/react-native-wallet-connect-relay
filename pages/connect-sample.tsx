@@ -20,7 +20,7 @@ export default function ConnectSample() {
     disconnect,
   } = useWallet();
   const onWalletConnectDetected = useCallback((node) => {
-    if (node !== null) {
+    if (node !== null && typeof window.ReactNativeWebView !== "undefined") {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({
           type: "found",
