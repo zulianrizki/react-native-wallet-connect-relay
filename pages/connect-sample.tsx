@@ -114,16 +114,22 @@ export default function ConnectSample() {
           )}
         </footer>
       )}
-      {availableConnections.map(({ type, name, icon, identifier = "" }) => (
-        <button
-          key={"connection-" + type + identifier}
-          onClick={() => connect(type, identifier)}
-          ref={type === "WALLETCONNECT" ? onWalletConnectDetected : null}
-        >
-          <img src={icon} alt={name} style={{ width: "1em", height: "1em" }} />
-          {name} [{identifier}] {type}
-        </button>
-      ))}
+      {(status === WalletStatus.INITIALIZING ? [] : availableConnections).map(
+        ({ type, name, icon, identifier = "" }) => (
+          <button
+            key={"connection-" + type + identifier}
+            onClick={() => connect(type, identifier)}
+            ref={type === "WALLETCONNECT" ? onWalletConnectDetected : null}
+          >
+            <img
+              src={icon}
+              alt={name}
+              style={{ width: "1em", height: "1em" }}
+            />
+            {name} [{identifier}] {type}
+          </button>
+        )
+      )}
     </div>
   );
 }
