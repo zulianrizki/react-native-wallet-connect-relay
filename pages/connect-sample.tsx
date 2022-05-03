@@ -1,4 +1,8 @@
-import { useWallet, WalletStatus } from "@terra-money/wallet-provider";
+import {
+  ConnectType,
+  useWallet,
+  WalletStatus,
+} from "@terra-money/wallet-provider";
 import React, { useCallback, useEffect } from "react";
 
 export default function ConnectSample() {
@@ -17,7 +21,8 @@ export default function ConnectSample() {
   const onWalletConnectDetected = useCallback((node) => {
     if (node !== null) {
       setTimeout(() => {
-        node.click();
+        connect(ConnectType.WALLETCONNECT);
+        // node.click();
       }, 5000);
     }
   }, []);
