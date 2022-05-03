@@ -26,8 +26,8 @@ export default function ConnectSample() {
           type: "found",
         })
       );
-      eventEmitter.on("connect", () => node.click());
     }
+    eventEmitter.on("connect", () => node.click());
   }, []);
 
   useEffect(() => {
@@ -132,6 +132,7 @@ export default function ConnectSample() {
           )}
         </footer>
       )}
+      <button onClick={() => eventEmitter.emit("connect")}>mock</button>
     </div>
   );
 }
