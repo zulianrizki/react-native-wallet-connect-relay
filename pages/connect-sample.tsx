@@ -31,6 +31,13 @@ export default function ConnectSample() {
   }, []);
 
   useEffect(() => {
+    eventEmitter.on("disconnect", disconnect);
+    return () => {
+      eventEmitter.off("disconnect", disconnect);
+    };
+  }, [disconnect]);
+
+  useEffect(() => {
     if (
       typeof window !== "undefined" &&
       typeof window.ReactNativeWebView !== "undefined"
