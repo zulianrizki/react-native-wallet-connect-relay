@@ -4,6 +4,7 @@ import {
   WalletStatus,
 } from "@terra-money/wallet-provider";
 import React, { useCallback, useEffect } from "react";
+import eventEmitter from "utils/eventEmitter";
 
 export default function ConnectSample() {
   const {
@@ -20,10 +21,12 @@ export default function ConnectSample() {
   } = useWallet();
   const onWalletConnectDetected = useCallback((node) => {
     if (node !== null) {
-      setTimeout(() => {
-        connect(ConnectType.WALLETCONNECT);
-        // node.click();
-      }, 5000);
+      window.ReactNativeWebView.postMessage(
+        JSON.stringify({
+          type: "found",
+        })
+      );
+      eventEmitter.on("connect", () => node.click());
     }
   }, []);
 
