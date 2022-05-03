@@ -1,5 +1,6 @@
 import {
   ConnectType,
+  useConnectedWallet,
   useWallet,
   WalletStatus,
 } from "@terra-money/wallet-provider";
@@ -19,6 +20,7 @@ export default function ConnectSample() {
     install,
     disconnect,
   } = useWallet();
+  const connectedWallet = useConnectedWallet();
   const onWalletConnectDetected = useCallback((node) => {
     if (node !== null && typeof window.ReactNativeWebView !== "undefined") {
       window.ReactNativeWebView.postMessage(
@@ -68,6 +70,22 @@ export default function ConnectSample() {
       }
     }
   }, [status]);
+
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.ReactNativeWebView !== "undefined"
+    ) {
+      if (connectedWallet) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: "connectedWallet",
+            data: connectedWallet,
+          })
+        );
+      }
+    }
+  }, [connectedWallet]);
 
   return (
     <div>
