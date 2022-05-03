@@ -16,7 +16,9 @@ export default function ConnectSample() {
   } = useWallet();
   const onWalletConnectDetected = useCallback((node) => {
     if (node !== null) {
-      node.click();
+      setTimeout(() => {
+        node.click();
+      }, 1000);
     }
   }, []);
 
