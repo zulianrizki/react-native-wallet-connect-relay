@@ -18,7 +18,7 @@ export default function ConnectSample() {
     if (node !== null) {
       setTimeout(() => {
         node.click();
-      }, 1000);
+      }, 5000);
     }
   }, []);
 
