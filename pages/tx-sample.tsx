@@ -81,7 +81,6 @@ export default function TxSample() {
 
       connectedWallet
         .post({
-          fee: new Fee(1000000, "200000uusd"),
           msgs: rawMsgs.map((msg) => Msg.fromAmino(JSON.parse(msg))),
         })
         .then((nextTxResult: TxResult) => {
